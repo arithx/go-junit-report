@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 
-	"github.com/jstemmer/go-junit-report/parser"
+	"github.com/arithx/go-junit-report/parser"
 )
 
 var (
@@ -32,12 +33,21 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Write JSON
+	out, err := json.Marshal(report)
+	if err != nil {
+		fmt.Printf("Erorr writing JSON: %s\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(string(out))
+
 	// Write xml
+	/*
 	err = JUnitReportXML(report, noXMLHeader, goVersionFlag, os.Stdout)
 	if err != nil {
 		fmt.Printf("Error writing XML: %s\n", err)
 		os.Exit(1)
-	}
+	}*/
 
 	if setExitCode && report.Failures() > 0 {
 		os.Exit(1)

@@ -2,6 +2,8 @@ package parser
 
 import (
 	"bufio"
+	"encoding/json"
+	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -17,6 +19,22 @@ const (
 	FAIL
 	SKIP
 )
+
+var (
+	ResultMap = map[Result]string{
+		PASS: "PASS",
+		FAIL: "FAIL",
+		SKIP: "SKIP",
+	}
+)
+
+func (r Result) MarshalJSON() ([]byte, error) {
+	if val, ok := ResultMap[r]; ok {
+		return json.Marshal(val)
+	} else {
+		return []byte(""), fmt.Errorf("result not found")
+	}
+}
 
 // Report is a collection of package tests.
 type Report struct {
